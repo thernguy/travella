@@ -1,43 +1,33 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { ScrollView, StyleSheet, View } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import { Text, TextInput, Button } from "react-native-paper";
 import Styles from "@/constants/Styles";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { useState } from "react";
+import { useAuth } from "@/hooks/useContext";
 import { useCreateBooking, useService } from "@/hooks/useDB";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 
 type BookingFormData = {
-  name: string;
   date: Date;
   time: Date;
   notes: string;
 };
 
-const serviceNames: Record<number, string> = {
-  101: "General Checkup",
-  102: "Blood Test",
-  103: "X-Ray",
-  201: "Cardiology Consultation",
-  202: "MRI Scan",
-  301: "Dental Checkup",
-  302: "Eye Examination",
-};
-
 export default function BookService() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { user } = useAuth();
   const router = useRouter();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const { service } = useService(Number(id));
-  const { create, loading, error } = useCreateBooking();
+  const { create, loading } = useCreateBooking();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<BookingFormData>({
     defaultValues: {
-      name: "",
       date: new Date(),
       notes: "",
       time: new Date(),
@@ -46,16 +36,29 @@ export default function BookService() {
 
   const onSubmit = async (data: BookingFormData) => {
     const { date, time, notes } = data;
-    const userId = 1; // Replace with actual user ID
-    const serviceId = Number(id); // Replace with actual service ID
-    create(userId, serviceId, date, time, notes)
-      .then(() => {
-        console.log("Booking created successfully");
-      })
-      .catch((error) => {
-        console.error("Error creating booking:", error);
-      });
-
+    const userId = user?.id;
+    if (!userId) {
+      Alert.alert("Error", "User not found. Please log in again.", [
+        { text: "OK", onPress: () => router.replace("/auth") },
+      ]);
+      return;
+    }
+    const serviceId = Number(id);
+    create(userId, serviceId, date, time, notes).then((res) => {
+      if (res) {
+        Alert.alert(
+          "Booking Confirmed",
+          `Your appoinment was confirmed for: ${service?.title}`,
+          [{ text: "OK", onPress: () => router.replace("/tabs/bookings") }]
+        );
+      } else {
+        Alert.alert("Error", "Failed to create booking");
+      }
+    }).catch((err) => {
+      console.error(err);
+      Alert.alert("Error", "Failed to create booking");
+    }
+    );
     // router.replace("/success"); // Later we can create a success screen
   };
 
@@ -82,30 +85,13 @@ export default function BookService() {
         <Controller
           control={control}
           rules={{ required: true }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Your Name"
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-              error={!!errors.name}
-              mode="outlined"
-              dense
-            />
-          )}
-          name="name"
-        />
-
-        <Controller
-          control={control}
-          rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <>
               <TextInput
                 label="Date"
                 onPress={() => setShowDatePicker(true)}
                 error={!!errors.date}
-                value={value.toLocaleDateString()}
+                value={value?.toLocaleDateString()}
                 mode="outlined"
                 dense
               />
@@ -192,6 +178,8 @@ export default function BookService() {
           mode="contained"
           onPress={handleSubmit(onSubmit)}
           style={{ marginTop: 20 }}
+          loading={loading}
+          disabled={loading}
         >
           Confirm Booking
         </Button>

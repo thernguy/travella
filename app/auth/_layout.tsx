@@ -4,8 +4,7 @@ export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-        // headerShown: false,
-        title: "Auth",
+        title: "Doc Time",
       }}
     >
       <Stack.Screen name="index" />

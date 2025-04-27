@@ -3,7 +3,9 @@ import { Hospital, Service } from "@/types/hospitals";
 import * as SQLite from "expo-sqlite";
 
 export const getHospitals = async () => {
-  const db = await SQLite.openDatabaseAsync("booking-app.db");
+  const db = await SQLite.openDatabaseAsync("booking-app.db", {
+    useNewConnection: true,
+  });
   const hospitals = await db.getAllAsync(`
       SELECT * FROM hospitals;
     `);
@@ -12,7 +14,9 @@ export const getHospitals = async () => {
 };
 
 export const getAllServices = async () => {
-  const db = await SQLite.openDatabaseAsync("booking-app.db");
+  const db = await SQLite.openDatabaseAsync("booking-app.db", {
+    useNewConnection: true,
+  });
   const services = await db.getAllAsync(
     `
       SELECT * FROM services;

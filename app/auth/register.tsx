@@ -1,17 +1,11 @@
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
-import { useForm, Controller } from "react-hook-form";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Text,
-  TextInput,
-} from "react-native-paper";
-import Styles from "@/constants/Styles";
-import { useRouter } from "expo-router";
 import PasswordInput from "@/components/ui/PasswordInput";
-import { useRegister } from "@/hooks/useDB";
+import Styles from "@/constants/Styles";
 import { useAuth } from "@/hooks/useContext";
+import { useRegister } from "@/hooks/useDB";
+import { useRouter } from "expo-router";
+import { Controller, useForm } from "react-hook-form";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Avatar, Button, Text, TextInput } from "react-native-paper";
 
 type FormData = {
   firstName: string;
@@ -44,10 +38,8 @@ export default function Register() {
     register(data.email, data.password, `${data.firstName} ${data.lastName}`)
       .then((res) => {
         login(res);
+        navigate.replace("/tabs");
       })
-      .catch((err) => {
-        console.error(err);
-      });
   };
 
   const gotoLogin = () => {

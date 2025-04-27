@@ -1,21 +1,48 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Entypo from "@expo/vector-icons/Entypo";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { Button, Text } from "react-native-paper";
+import { useAuth } from "@/hooks/useContext";
 
 export default function TabLayout() {
+  const router = useRouter();
   const colorScheme = useColorScheme();
-
+  const { logout, user } = useAuth();
+  const handleLogout = () => {
+    router.replace("/auth");
+    logout();
+  };
+  const onLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          onPress: () => {
+            handleLogout();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerTitle: "Doc TIme",
+        headerTitle: user?.name,
+        headerTitleAlign: "center",
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -24,6 +51,21 @@ export default function TabLayout() {
           },
           default: {},
         }),
+        headerRight: () => {
+          return (
+            <Button icon="logout" mode="text" onPress={onLogout}>
+              Logout
+            </Button>
+          );
+        },
+
+        headerLeft: () => {
+          return (
+            <Text variant="titleLarge" style={{ marginLeft: 10 }}>
+              Doc Time
+            </Text>
+          );
+        },
       }}
     >
       <Tabs.Screen

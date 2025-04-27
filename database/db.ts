@@ -126,4 +126,15 @@ const seedUsers = async (db: SQLite.SQLiteDatabase) => {
       photo TEXT 
     );
   `);
+  const users = await db.getAllAsync(`
+    SELECT * FROM users;
+  `);
+  if (users.length === 0) {
+    await db.runAsync(
+      `
+        INSERT INTO users (email, password, name) 
+        VALUES (?, ?, ?)`,
+      ["mamamun1999@gmail.com", "password@", "Mamun Mahmood"]
+    );
+  }
 };

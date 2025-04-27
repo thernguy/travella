@@ -3,7 +3,7 @@ import Spinner from "@/components/ui/Spinner";
 import Styles from "@/constants/Styles";
 import { useHospitals } from "@/hooks/useDB";
 import { useRouter } from "expo-router";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
 export default function HospitalList() {
@@ -12,21 +12,13 @@ export default function HospitalList() {
     navigate.push(`/hospitals/${hospitalId}`);
   };
 
-  const { hospitals, loading, error } = useHospitals();
-
+  const { hospitals, loading, fetch } = useHospitals();
+  
   if (loading) {
     return (
       <View style={Styles.empty}>
         <Spinner />
         <Text variant="bodyLarge">Fetching Hospitals...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={Styles.empty}>
-        <Text variant="bodyLarge">Error: {error}</Text>
       </View>
     );
   }
@@ -49,6 +41,13 @@ export default function HospitalList() {
           <Text variant="bodyLarge">No hospitals found.</Text>
         </View>
       )}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading}
+          onRefresh={fetch}
+          tintColor="#6200ee"
+        />
+      }
     />
   );
 }
@@ -56,5 +55,6 @@ export default function HospitalList() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    flex: 1,
   },
 });

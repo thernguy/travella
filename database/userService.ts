@@ -1,5 +1,6 @@
 import { User } from "@/types/hospitals";
 import * as SQLite from "expo-sqlite";
+import { Alert } from "react-native";
 
 export const registerUser = async (
   email: string,
@@ -9,6 +10,21 @@ export const registerUser = async (
   const db = await SQLite.openDatabaseAsync("booking-app.db", {
     useNewConnection: true,
   });
+  const existingUser = await db.getFirstAsync(
+    `
+      SELECT name, email, id
+      FROM users
+      WHERE email = ?`,
+    [email]
+  );
+  if (existingUser) {
+    Alert.alert(
+      "User already exists",
+      "Please use a different email address.",
+      [{ text: "OK" }]
+    );
+    return null;
+  }
   await db.runAsync(
     `
       INSERT INTO users (email, password, name) 
@@ -52,4 +68,18 @@ export const getAllUsers = async () => {
       FROM users`
   );
   return result as User[];
+};
+
+export const findUserByEmail = async (email: string) => {
+  const db = await SQLite.openDatabaseAsync("booking-app.db", {
+    useNewConnection: true,
+  });
+  const result = await db.getFirstAsync(
+    `
+      SELECT name, email, id
+      FROM users
+      WHERE email = ?`,
+    [email]
+  );
+  return result as User;
 };
