@@ -11,6 +11,9 @@ export type Service = {
   title: string;
   price: number;
   description: string;
+  hospital_name?: string;
+  hospital_logo?: string;
+  hospital_location?: string;
 };
 
 export type Booking = {

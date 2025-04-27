@@ -1,6 +1,11 @@
-import { useEffect, useState } from "react";
+import { createBooking } from "@/database/bookingService";
+import {
+  getHospitals,
+  getServiceById,
+  getServicesById,
+} from "@/database/hospitalService";
 import { Hospital, Service } from "@/types/hospitals";
-import { getHospitals, getServicesById } from "@/database/hospitalService";
+import { useEffect, useState } from "react";
 
 export const useHospitals = () => {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
@@ -52,3 +57,79 @@ export const useServices = (hospitalId: number) => {
   return { services, loading, error };
 };
 
+export const useService = (serviceId: number) => {
+  const [service, setService] = useState<Service | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const data = await getServiceById(serviceId);
+        setService(data);
+      } catch (error) {
+        console.error("Error fetching service:", error);
+        setError("Failed to fetch service");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (serviceId) {
+      fetchService();
+    }
+  }, [serviceId]);
+
+  return { service, loading, error };
+};
+
+export const useCreateBooking = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const create = async (
+    userId: number,
+    serviceId: number,
+    date: Date,
+    time: Date,
+    notes: string
+  ) => {
+    setLoading(true);
+    try {
+      createBooking(userId, serviceId, date, time, notes);
+    } catch (error) {
+      console.error("Error creating booking:", error);
+      setError("Failed to create booking");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { create, loading, error };
+};
+
+// export const useBookings = (userId: number) => {
+//   const [bookings, setBookings] = useState<any[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+
+//   useEffect(() => {
+//     const fetchBookings = async () => {
+//       try {
+//         const data = await getBookingsForUser(userId);
+//         setBookings(data);
+//       } catch (error) {
+//         console.error("Error fetching bookings:", error);
+//         setError("Failed to fetch bookings");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     if (userId) {
+//       fetchBookings();
+//     }
+//   }, [userId]);
+
+//   return { bookings, loading, error };
+// };

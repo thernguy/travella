@@ -8,6 +8,8 @@ export const initDB = async () => {
     });
     await seedHospitals(db);
     await seedServices(db);
+    await seedBookings(db);
+    console.log("Database initialized successfully");
   } catch (error) {
     console.error("Error initializing the database: ", error);
   }
@@ -41,7 +43,7 @@ const seedHospitals = async (db: SQLite.SQLiteDatabase) => {
   }
 };
 
-export const seedServices = async (db: SQLite.SQLiteDatabase) => {
+const seedServices = async (db: SQLite.SQLiteDatabase) => {
   try {
     await db.execAsync(`
       PRAGMA journal_mode = WAL;
@@ -90,4 +92,22 @@ export const seedServices = async (db: SQLite.SQLiteDatabase) => {
   } catch (error) {
     console.error("Error seeding services: ", error);
   }
+};
+
+const seedBookings = async (db: SQLite.SQLiteDatabase) => {
+  await db.execAsync(`
+    PRAGMA journal_mode = WAL;
+
+    -- Create Bookings table
+    CREATE TABLE IF NOT EXISTS bookings (
+      id INTEGER PRIMARY KEY NOT NULL,
+      user_id INTEGER NOT NULL,
+      service_id INTEGER NOT NULL,
+      date TEXT NOT NULL,
+      time TEXT NOT NULL,
+      notes TEXT,
+      FOREIGN KEY (service_id) REFERENCES services (id)
+      FOREIGN KEY (user_id) REFERENCES users (id)
+    );
+  `);
 };
