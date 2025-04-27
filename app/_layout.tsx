@@ -5,18 +5,20 @@ import { useFonts } from "expo-font";
 import { Stack, useNavigation, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
 import * as SystemUI from "expo-system-ui";
 import { Platform } from "react-native";
 import { initDB } from "@/database/db";
+import { AuthProvider, useAuth } from "@/hooks/useContext";
+import { getAllUsers } from "@/database/userService";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(true);
+function RootLayout() {
+  const { user } = useAuth();
 
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -31,16 +33,21 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
-      if (isLoggedIn) {
+      if (user) {
         router.replace("/tabs");
-        const setupDatabase = async () => {
-          await initDB();
-        };
-        setupDatabase();
       } else {
         router.replace("/auth");
       }
+      getAllUsers()
+        .then((res) => {
+          console.log("Users: ", res);
+        }
+        )
     }
+    const setupDatabase = async () => {
+      await initDB();
+    };
+    setupDatabase();
   }, [loaded]);
 
   if (!loaded) {
@@ -72,5 +79,13 @@ export default function RootLayout() {
         <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       </PaperProvider>
     </ThemeProvider>
+  );
+}
+
+export default function RootLayoutWrapper() {
+  return (
+    <AuthProvider>
+      <RootLayout />
+    </AuthProvider>
   );
 }

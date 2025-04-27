@@ -4,6 +4,8 @@ import { Avatar, Button, Text, TextInput } from "react-native-paper";
 import Styles from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import PasswordInput from "@/components/ui/PasswordInput";
+import { useLogin } from "@/hooks/useDB";
+import { useAuth } from "@/hooks/useContext";
 
 type FormData = {
   email: string;
@@ -22,10 +24,21 @@ export default function Login() {
       password: "",
     },
   });
-  const onSubmit = (data: FormData) => console.log(data);
+  const { login, loading } = useLogin();
+  const { login: authLogin } = useAuth();
+  const onSubmit = (data: FormData) => {
+    login(data.email, data.password)
+      .then((res) => {
+        authLogin(res);
+        navigate.replace("/tabs");
+      })
+      .catch((err) => {
+        Alert.alert("Login failed", "Invalid email or password");
+      });
+  };
 
   const gotoRegister = () => {
-    navigate.replace("/register");
+    navigate.replace("/auth/register");
   };
 
   return (
@@ -41,12 +54,18 @@ export default function Login() {
           control={control}
           rules={{
             required: true,
+            pattern: {
+              value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: "Invalid email address",
+            },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               label="Email"
               mode="outlined"
               dense
+              keyboardType="email-address"
+              autoCapitalize="none"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -56,13 +75,17 @@ export default function Login() {
           name="email"
         />
         {errors.email && (
-          <Text style={{ color: "red" }}>Email is required.</Text>
+          <Text style={{ color: "red" }}>{errors.email.message}</Text>
         )}
 
         <Controller
           control={control}
           rules={{
             required: true,
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters",
+            },
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <PasswordInput
@@ -75,9 +98,14 @@ export default function Login() {
           name="password"
         />
         {errors.password && (
-          <Text style={{ color: "red" }}>Password is required.</Text>
+          <Text style={{ color: "red" }}>{errors.password.message}</Text>
         )}
-        <Button mode="contained" onPress={handleSubmit(onSubmit)}>
+        <Button
+          mode="contained"
+          onPress={handleSubmit(onSubmit)}
+          loading={loading}
+          disabled={loading}
+        >
           Submit
         </Button>
         <Button mode="text" onPress={gotoRegister}>

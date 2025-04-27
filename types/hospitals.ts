@@ -25,3 +25,9 @@ export type Booking = {
   phone: string;
   user_id: number;
 };
+
+export type User = {
+  id: number;
+  email: string;
+  name: string;
+};

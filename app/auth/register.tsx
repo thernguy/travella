@@ -10,6 +10,8 @@ import {
 import Styles from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import PasswordInput from "@/components/ui/PasswordInput";
+import { useRegister } from "@/hooks/useDB";
+import { useAuth } from "@/hooks/useContext";
 
 type FormData = {
   firstName: string;
@@ -35,10 +37,21 @@ export default function Register() {
       confirmPassword: "",
     },
   });
-  const onSubmit = (data: FormData) => console.log(data);
+  const { register, loading } = useRegister();
+  const { login } = useAuth();
+
+  const onSubmit = (data: FormData) => {
+    register(data.email, data.password, `${data.firstName} ${data.lastName}`)
+      .then((res) => {
+        login(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const gotoLogin = () => {
-    navigate.replace("/");
+    navigate.replace("/auth");
   };
 
   return (
@@ -110,6 +123,8 @@ export default function Register() {
               label="Email"
               mode="outlined"
               dense
+              keyboardType="email-address"
+              autoCapitalize="none"
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
@@ -169,7 +184,12 @@ export default function Register() {
           <Text style={{ color: "red" }}>{errors.confirmPassword.message}</Text>
         )}
 
-        <Button mode="contained" onPress={handleSubmit(onSubmit)}>
+        <Button
+          mode="contained"
+          onPress={handleSubmit(onSubmit)}
+          loading={loading}
+          disabled={loading}
+        >
           Submit
         </Button>
         <Button mode="text" onPress={gotoLogin}>

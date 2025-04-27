@@ -9,6 +9,7 @@ export const initDB = async () => {
     await seedHospitals(db);
     await seedServices(db);
     await seedBookings(db);
+    await seedUsers(db);
     console.log("Database initialized successfully");
   } catch (error) {
     console.error("Error initializing the database: ", error);
@@ -108,6 +109,21 @@ const seedBookings = async (db: SQLite.SQLiteDatabase) => {
       notes TEXT,
       FOREIGN KEY (service_id) REFERENCES services (id)
       FOREIGN KEY (user_id) REFERENCES users (id)
+    );
+  `);
+};
+
+const seedUsers = async (db: SQLite.SQLiteDatabase) => {
+  await db.execAsync(`
+    PRAGMA journal_mode = WAL;
+
+    -- Create Users table
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      name TEXT NOT NULL,
+      photo TEXT 
     );
   `);
 };

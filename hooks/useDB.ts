@@ -4,7 +4,8 @@ import {
   getServiceById,
   getServicesById,
 } from "@/database/hospitalService";
-import { Hospital, Service } from "@/types/hospitals";
+import { loginUser, registerUser } from "@/database/userService";
+import { Hospital, Service, User } from "@/types/hospitals";
 import { useEffect, useState } from "react";
 
 export const useHospitals = () => {
@@ -106,6 +107,37 @@ export const useCreateBooking = () => {
   };
 
   return { create, loading, error };
+};
+
+export const useRegister = () => {
+  const [loading, setLoading] = useState(false);
+
+  const register = async (email: string, password: string, name: string) => {
+    setLoading(true);
+    const user = await registerUser(email, password, name);
+    setLoading(false);
+    if (!user) {
+      throw new Error("Invalid email or password");
+    }
+    return user as User;
+  };
+
+  return { register, loading };
+};
+export const useLogin = () => {
+  const [loading, setLoading] = useState(false);
+
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    const user = await loginUser(email, password);
+    setLoading(false);
+    if (!user) {
+      throw new Error("Invalid email or password");
+    }
+    return user as User;
+  };
+
+  return { login, loading };
 };
 
 // export const useBookings = (userId: number) => {

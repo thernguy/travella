@@ -1,14 +1,55 @@
+import { User } from "@/types/hospitals";
 import * as SQLite from "expo-sqlite";
 
-export const addUser = async (email: string, password: string) => {
+export const registerUser = async (
+  email: string,
+  password: string,
+  name: string
+) => {
   const db = await SQLite.openDatabaseAsync("booking-app.db", {
     useNewConnection: true,
   });
-  const result = await db.runAsync(
+  await db.runAsync(
     `
-      INSERT INTO users (email, password) 
-      VALUES (?, ?)`,
+      INSERT INTO users (email, password, name) 
+      VALUES (?, ?, ?)`,
+    [email, password, name]
+  );
+  const result = await db.getFirstAsync(
+    `
+      SELECT name, email, id
+      FROM users
+      WHERE email = ? AND password = ?`,
     [email, password]
   );
+  if (!result) {
+    throw new Error("Invalid email or password");
+  }
   return result;
+};
+
+export const loginUser = async (email: string, password: string) => {
+  const db = await SQLite.openDatabaseAsync("booking-app.db", {
+    useNewConnection: true,
+  });
+  const result = await db.getFirstAsync(
+    `
+      SELECT name, email, id
+      FROM users
+      WHERE email = ? AND password = ?`,
+    [email, password]
+  );
+  return result as User;
+};
+
+export const getAllUsers = async () => {
+  const db = await SQLite.openDatabaseAsync("booking-app.db", {
+    useNewConnection: true,
+  });
+  const result = await db.getAllAsync(
+    `
+      SELECT name, email, id
+      FROM users`
+  );
+  return result as User[];
 };
