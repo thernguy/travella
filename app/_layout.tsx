@@ -33,7 +33,7 @@ export default function RootLayout() {
     <ThemeProvider value={theme as any}>
       <PaperProvider theme={theme}>
         <Stack>
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ title: "Welcome" }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
