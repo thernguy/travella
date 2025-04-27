@@ -11,6 +11,11 @@ const Styles = StyleSheet.create({
   text2xl: {
     fontSize: 32,
   },
+  empty: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default Styles;

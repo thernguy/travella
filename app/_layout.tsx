@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
 import * as SystemUI from "expo-system-ui";
+import { Platform } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -44,7 +45,25 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={theme as any}>
       <PaperProvider theme={theme}>
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="hospitals/[id]"
+            options={{
+              headerShown: true,
+              title: "Hospital Services",
+            }}
+          />
+          <Stack.Screen
+            name="book/[id]"
+            options={{
+              headerShown: true,
+              title: "Book Service",
+              presentation:
+                Platform.OS === "ios" ? "formSheet" : "containedModal",
+              animation: "fade",
+            }}
+          />
+        </Stack>
         <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       </PaperProvider>
     </ThemeProvider>
