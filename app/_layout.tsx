@@ -10,6 +10,7 @@ import { PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
 import * as SystemUI from "expo-system-ui";
 import { Platform } from "react-native";
+import { initDB } from "@/database/db";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,6 +33,10 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
       if (isLoggedIn) {
         router.replace("/tabs");
+        const setupDatabase = async () => {
+          await initDB();
+        };
+        setupDatabase();
       } else {
         router.replace("/auth");
       }

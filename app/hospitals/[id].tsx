@@ -1,45 +1,50 @@
 import ServiceCard from "@/components/ui/ServiceCard";
+import Spinner from "@/components/ui/Spinner";
 import Styles from "@/constants/Styles";
+import { useServices } from "@/hooks/useDB";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
-
-const services = {
-  1: [
-    { id: 101, name: "General Checkup" },
-    { id: 102, name: "Blood Test" },
-    { id: 103, name: "X-Ray" },
-  ],
-  2: [
-    { id: 201, name: "Cardiology Consultation" },
-    { id: 202, name: "MRI Scan" },
-  ],
-  3: [
-    { id: 301, name: "Dental Checkup" },
-    { id: 302, name: "Eye Examination" },
-  ],
-};
 
 export default function HospitalServices() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const router = useRouter();
 
-  const serviceList = services[id as unknown as keyof typeof services] || [];
-
   const handleBook = (serviceId: number) => {
     router.push(`/book/${serviceId}`);
   };
+  const { services, loading, error } = useServices(Number(id));
+
+  if (loading) {
+    return (
+      <View style={Styles.empty}>
+        <Spinner />
+        <Text variant="bodyLarge">Fetching Services...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={Styles.empty}>
+        <Text variant="bodyLarge">Error: {error}</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
       style={styles.container}
-      contentContainerStyle={Styles.containerContent}
-      data={serviceList}
+      contentContainerStyle={{
+        paddingBottom: 120,
+      }}
+      data={services}
       keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item: { id, name } }) => (
-        <ServiceCard id={id} name={name} handleBook={handleBook} />
+      renderItem={({ item }) => (
+        <ServiceCard service={item} handleBook={handleBook} />
       )}
+      initialNumToRender={8}
       ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
       ListEmptyComponent={() => (
         <View style={Styles.empty}>

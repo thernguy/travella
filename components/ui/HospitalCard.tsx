@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, Card } from "react-native-paper";
 
 interface HospitalCardProps {
@@ -17,7 +17,9 @@ const HospitalCard: FC<HospitalCardProps> = ({
 }) => {
   return (
     <Card style={styles.card} onPress={() => handleSelect(id)}>
-      <Card.Title title={name} subtitle={location} />
+      <View>
+        <Card.Title title={name} subtitle={location} />
+      </View>
       <Card.Actions>
         <Button onPress={() => handleSelect(id)}>View Services</Button>
       </Card.Actions>

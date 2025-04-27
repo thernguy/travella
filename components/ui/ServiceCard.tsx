@@ -1,17 +1,23 @@
+import { Service } from "@/types/hospitals";
 import { FC } from "react";
 import { StyleSheet } from "react-native";
-import { Button, Card } from "react-native-paper";
+import { Button, Card, Text } from "react-native-paper";
 
 interface ServiceCardProps {
-  id: number;
-  name: string;
+  service: Service;
   handleBook: (id: number) => void;
 }
 
-const ServiceCard: FC<ServiceCardProps> = ({ id, name, handleBook }) => {
+const ServiceCard: FC<ServiceCardProps> = ({ service, handleBook }) => {
+  const { id, title, price, description } = service;
   return (
     <Card style={styles.card}>
-      <Card.Title title={name} />
+      <Card.Title titleVariant="titleMedium" subtitleVariant="labelLarge" title={title} subtitle={description} />
+      <Card.Content>
+        <Text variant="titleLarge" style={styles.price}>
+          {price} BDT
+        </Text>
+      </Card.Content>
       <Card.Actions>
         <Button onPress={() => handleBook(id)}>Book Now</Button>
       </Card.Actions>
@@ -24,5 +30,14 @@ export default ServiceCard;
 const styles = StyleSheet.create({
   card: {
     borderRadius: 8,
+  },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 8,
+  },
+  price: {
+    textAlign: "center",
   },
 });

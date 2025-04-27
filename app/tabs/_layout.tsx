@@ -1,9 +1,9 @@
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Entypo from "@expo/vector-icons/Entypo";
 import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
-
 import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -15,7 +15,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerTitle: "Available Hospitals",
+        headerTitle: "Doc TIme",
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -29,9 +29,9 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Hospitals",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <FontAwesome name="hospital-o" size={24} color={color} />
           ),
         }}
       />
@@ -40,7 +40,7 @@ export default function TabLayout() {
         options={{
           title: "Bookings",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="chevron.left.forwardslash.chevron.right" color={color} />
+            <Entypo name="bookmark" size={24} color={color} />
           ),
         }}
       />
