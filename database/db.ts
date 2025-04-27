@@ -3,7 +3,9 @@ import * as SQLite from "expo-sqlite";
 
 export const initDB = async () => {
   try {
-    const db = await SQLite.openDatabaseAsync("booking-app.db");
+    const db = await SQLite.openDatabaseAsync("booking-app.db", {
+      useNewConnection: true,
+    });
     await seedHospitals(db);
     await seedServices(db);
   } catch (error) {
@@ -26,7 +28,7 @@ const seedHospitals = async (db: SQLite.SQLiteDatabase) => {
   const hospitals = await db.getAllAsync(`
     SELECT * FROM hospitals;
   `);
-  
+
   if (hospitals.length === 0) {
     for (const hospital of HOSPITALS_DATA) {
       await db.runAsync(
@@ -54,7 +56,13 @@ export const seedServices = async (db: SQLite.SQLiteDatabase) => {
         FOREIGN KEY (hospital_id) REFERENCES hospitals (id)
       );
     `);
-    // Fetch hospital IDs
+
+    const services = await db.getAllAsync(`
+      SELECT *  FROM services;
+    `);
+    if (services.length > 0) {
+      return;
+    }
     const hospitals = (await db.getAllAsync(
       "SELECT id FROM hospitals"
     )) as any[];
