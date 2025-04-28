@@ -6,7 +6,7 @@ const Styles = StyleSheet.create({
     flex: 1,
   },
   containerContent: {
-    paddingBottom: 40,
+    paddingBottom: 120,
   },
   text2xl: {
     fontSize: 32,

@@ -38,16 +38,11 @@ function RootLayout() {
       } else {
         router.replace("/auth");
       }
-      getAllUsers()
-        .then((res) => {
-          console.log("Users: ", res);
-        }
-        )
+        const setupDatabase = async () => {
+          await initDB();
+        };
+        setupDatabase();
     }
-    const setupDatabase = async () => {
-      await initDB();
-    };
-    setupDatabase();
   }, [loaded]);
 
   if (!loaded) {
@@ -63,6 +58,7 @@ function RootLayout() {
             options={{
               headerShown: true,
               title: "Hospital Services",
+              headerBackTitle: "Back",
             }}
           />
           <Stack.Screen
@@ -72,7 +68,7 @@ function RootLayout() {
               title: "Book Service",
               presentation:
                 Platform.OS === "ios" ? "formSheet" : "containedModal",
-              animation: "fade",
+              animation: Platform.OS === "ios" ? "slide_from_bottom" : "fade",
             }}
           />
         </Stack>

@@ -5,7 +5,7 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, Platform, ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 
 type BookingFormData = {
@@ -99,14 +99,13 @@ export default function BookService() {
                 <RNDateTimePicker
                   value={value}
                   mode="date"
-                  display="default"
+                  display={Platform.OS === "ios" ? "inline" : "default"}
                   onChange={(event, selectedDate) => {
                     const currentDate = selectedDate || value;
                     onChange(currentDate);
                     setShowDatePicker(false);
                   }}
                   onTouchCancel={() => setShowDatePicker(false)}
-                  onTouchEnd={() => setShowDatePicker(false)}
                 />
               )}
             </>
@@ -139,11 +138,10 @@ export default function BookService() {
                 <RNDateTimePicker
                   value={value}
                   mode="time"
-                  display="clock"
+                  display={Platform.OS === "ios" ? "inline" : "default"}
                   onChange={(event, selectedTime) => {
                     const time = selectedTime;
                     onChange(time);
-                    setShowTimePicker(false);
                   }}
                   onTouchCancel={() => setShowTimePicker(false)}
                 />

@@ -32,7 +32,7 @@ export default function BookingList() {
       ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
       ListEmptyComponent={() => (
         <View style={Styles.empty}>
-          <Text variant="bodyLarge">No hospitals found.</Text>
+          <Text variant="bodyLarge">No bookings found.</Text>
         </View>
       )}
       refreshControl={
