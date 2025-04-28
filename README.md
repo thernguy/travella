@@ -1,50 +1,81 @@
-# Welcome to your Expo app 👋
+# Booking App Prototype
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile-first booking system prototype built with React Native (Expo) and SQLite.
 
-## Get started
+## Overview
 
-1. Install dependencies
+Built a mobile-focused booking system prototype in ~6.5 hours using React Native (Expo) with local SQLite database and clean architecture.
 
+## Tech Stack
+
+- **Mobile Framework**: React Native (Expo)
+- **Backend/API**: Local SQLite with `expo-sqlite`
+- **State Management**: React Context API
+- **Persistence**: AsyncStorage for user login sessions
+
+## Features
+
+- Email/password authentication
+- List of hospitals with details
+- View hospital services/tests
+- Book an appointment
+- Basic validation and error handling
+- Offline-first (SQLite database)
+
+## Documentation and Decisions
+
+### Stack & Decisions
+
+- React Native (Expo) chosen for rapid cross-platform development.
+- expo-sqlite used for local, offline-capable database.
+- AsyncStorage used for login session persistence.
+
+### API & Data Structure
+
+- Custom hooks (`useAuth`, `useHospitals`, `useServices`) manage loading, error, and DB operations.
+- `db.ts` handles:
+  - Initializing database and tables
+  - Seeding mock hospitals, services, and users if empty
+
+## Project Structure
+
+- `/components/UI` → Reusable UI components
+- `/constants` → Mock data for hospitals and services
+- `/contexts` → Authentication context
+- `/db` → Database setup and seeding
+- `/hooks` → Custom API and logic hooks
+- `/screens` → All application screens
+
+
+## Error Handling
+
+- Loading spinners during API fetches.
+- Error alerts for user feedback and console logs for debugging.
+
+## Assumptions
+
+- Single user session (no reset password, OTP, etc.).
+- App remains usable offline after installation.
+- Focused on clean UX over full production-level flows.
+
+## 🚀 How to Run
+
+1. **Clone the repo**.
+
+2. **Install dependencies**:
    ```bash
    npm install
-   ```
+   npm run start
+3. Open the app using:
+   - Expo Go (on your phone)
+   - OR an iOS/Android simulator.
 
-2. Start the app
 
-   ```bash
-    npx expo start
-   ```
+## 🔐 Login Credentials
+Use the following to log in:
 
-In the output, you'll find options to open the app in a
+- Email: mamamun1999@gmail.com
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Password: password@
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Or simply register a new account from the app.
