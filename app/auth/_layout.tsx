@@ -4,7 +4,7 @@ export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-        title: "Doc Time",
+        title: "Travella",
       }}
     >
       <Stack.Screen name="index" />

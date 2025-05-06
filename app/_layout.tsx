@@ -1,18 +1,18 @@
 import { CombinedDarkTheme, CombinedDefaultTheme } from "@/constants/Themes";
+import { initDB } from "@/database/db";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack, useNavigation, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { createContext, useEffect, useState } from "react";
+import * as SystemUI from "expo-system-ui";
+import { useEffect } from "react";
+import { Platform } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
-import * as SystemUI from "expo-system-ui";
-import { Platform } from "react-native";
-import { initDB } from "@/database/db";
-import { AuthProvider, useAuth } from "@/hooks/useContext";
-import { getAllUsers } from "@/database/userService";
+import * as Application from "expo-application";
+import { ContextProvider, useAuth } from "@/context/AppContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -38,11 +38,13 @@ function RootLayout() {
       } else {
         router.replace("/auth");
       }
-        const setupDatabase = async () => {
-          await initDB();
-        };
-        setupDatabase();
+      const setupDatabase = async () => {
+        await initDB();
+      };
+      setupDatabase();
     }
+    const bundleId = Application.applicationId;
+    console.log(`Bundle ID: ${bundleId}`);
   }, [loaded]);
 
   if (!loaded) {
@@ -57,7 +59,7 @@ function RootLayout() {
             name="hospitals/[id]"
             options={{
               headerShown: true,
-              title: "Hospital Services",
+              title: "Travella",
               headerBackTitle: "Back",
             }}
           />
@@ -80,8 +82,8 @@ function RootLayout() {
 
 export default function RootLayoutWrapper() {
   return (
-    <AuthProvider>
+    <ContextProvider>
       <RootLayout />
-    </AuthProvider>
+    </ContextProvider>
   );
 }
