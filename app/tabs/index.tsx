@@ -1,8 +1,9 @@
 import LogCard from "@/components/ui/HospitalCard";
 import Spinner from "@/components/ui/Spinner";
 import Styles from "@/constants/Styles";
+import { useAppContext } from "@/context/AppContext";
 import { useLogs } from "@/hooks/useDB";
-import { useFeed } from "@/hooks/useFirebase";
+import { useGetLogs } from "@/hooks/useFirebase";
 import { useRouter } from "expo-router";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
@@ -12,8 +13,9 @@ export default function Feed() {
   const handleSelect = (logId: string) => {
     navigate.push(`/logs/${logId}`);
   };
+  const { user } = useAppContext();
 
-  const { data, loading, fetch } = useFeed();
+  const { data, loading, fetch } = useGetLogs(user?.uid);
 
   if (loading) {
     return (
@@ -37,11 +39,18 @@ export default function Feed() {
       )}
       initialNumToRender={8}
       ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-      ListEmptyComponent={() => (
-        <View style={Styles.empty}>
-          <Text variant="bodyLarge">No log found.</Text>
-        </View>
-      )}
+      ListEmptyComponent={() =>
+        loading ? (
+          <View style={Styles.empty}>
+            <Spinner />
+            <Text variant="bodyLarge">Fetching Logs...</Text>
+          </View>
+        ) : (
+          <View style={Styles.empty}>
+            <Text variant="bodyLarge">No log found.</Text>
+          </View>
+        )
+      }
       refreshControl={
         <RefreshControl
           refreshing={loading}

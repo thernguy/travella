@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { getFeed } from "@/database/feedService";
 import { LogFormData, LogType } from "@/types/data";
-import { createLog } from "@/database/logServices";
+import { createLog, getLogs } from "@/database/logServices";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -47,14 +47,18 @@ export const useRegister = () => {
   return { register, loading };
 };
 
-export const useFeed = () => {
+export const useGetLogs = (userId: string | undefined) => {
   const [data, setData] = useState<LogType[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = async () => {
+    if (!userId) {
+      setError("User ID is required");
+      return;
+    }
     try {
-      const data = await getFeed();
+      const data = await getLogs(userId);
       setData(data);
     } catch (error) {
       console.error("Error fetching hospitals:", error);

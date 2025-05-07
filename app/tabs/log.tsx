@@ -29,6 +29,8 @@ export default function AddLog() {
       await create({
         location: data.location,
         notes: data.notes,
+        userId: user.uid,
+        photos: [],
       });
       Alert.alert("Success", "Log added!");
       reset();

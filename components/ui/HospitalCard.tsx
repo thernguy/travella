@@ -4,21 +4,22 @@ import { Button, Card } from "react-native-paper";
 
 interface HospitalCardProps {
   id: string;
-  name: string;
   location: string;
+  notes: string;
+
   handleSelect: (id: string) => void;
 }
 
 const LogCard: FC<HospitalCardProps> = ({
   id,
-  name,
   location,
+  notes,
   handleSelect,
 }) => {
   return (
     <Card style={styles.card} onPress={() => handleSelect(id)}>
       <View>
-        <Card.Title title={name} subtitle={location} />
+        <Card.Title title={location} subtitle={notes} />
       </View>
       <Card.Actions>
         <Button onPress={() => handleSelect(id)}>View Services</Button>
