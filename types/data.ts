@@ -1,29 +1,13 @@
-export type Log = {
-  id: string;
-  name: string;
-  logo: string;
+export type LogType = {
+  userId: string;
   location: string;
+  notes: string;
+  photos: string[];
 };
 
-export type Service = {
-  id: string;
-  hospital_id: number;
-  title: string;
-  price: number;
-  description: string;
-  hospital_name?: string;
-  hospital_logo?: string;
-  hospital_location?: string;
-};
-
-export type Booking = {
-  id: string;
-  service_id: number;
-  date: string;
-  time: string;
-  name: string;
-  phone: string;
-  user_id: number;
+export type LogFormData = {
+  location: string;
+  notes: string;
 };
 
 export type User = {

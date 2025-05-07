@@ -1,13 +1,13 @@
+import { db } from "@/firebaseConfig";
+import { LogFormData, LogType } from "@/types/data";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 
-export const createLog = async (
-  userId: number,
-  serviceId: number,
-  date: Date,
-  time: Date,
-  notes: string
-) => {
-  const result = {};
-  return result;
+export const createLog = async (log: LogFormData) => {
+  const docRef = await addDoc(collection(db, "travelLogs"), {
+    ...log,
+    createdAt: Timestamp.now(),
+  });
+  return docRef.id;
 };
 
 export const getLogsForUser = async (userId: string) => {

@@ -78,9 +78,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="logs"
+        name="log"
         options={{
-          title: "Logs",
+          title: "Add Log",
           tabBarIcon: ({ color }) => (
             <Entypo name="bookmark" size={24} color={color} />
           ),

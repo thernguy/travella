@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "@/firebaseConfig";
 import { getFeed } from "@/database/feedService";
-import { Log } from "@/types/data";
+import { LogFormData, LogType } from "@/types/data";
+import { createLog } from "@/database/logServices";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -47,8 +48,8 @@ export const useRegister = () => {
 };
 
 export const useFeed = () => {
-  const [data, setData] = useState<Log[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<LogType[]>([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = async () => {
@@ -70,32 +71,21 @@ export const useFeed = () => {
   return { data, loading, error, fetch };
 };
 
-export const useCreateLog = (userId: string | undefined) => {
+export const useCreateLog = () => {
   const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        if (!userId) {
-          setError("User ID is required");
-          return;
-        }
-        // const data = await getLogsForUser(userId);
-        // setData(data);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-        setError("Failed to fetch bookings");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetch();
+  const create = async (log: LogFormData) => {
+    try {
+      const res = await createLog(log);
+      setData((prev) => [...prev, { ...log, id: res }]);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+      setError("Failed to fetch bookings");
+    } finally {
+      setLoading(false);
     }
-  }, [userId]);
+  };
 
-  return { data, loading, error };
+  return { data, loading, error, create };
 };
