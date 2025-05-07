@@ -12,7 +12,7 @@ export const loginUser = async (email: string, password: string) => {
     const { user } = userCredential;
     return user;
   } catch (err) {
-    console.error("Login failed", err);
+    console.log("Login failed", err);
     return null;
   }
 };

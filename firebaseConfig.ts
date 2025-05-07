@@ -1,8 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import Storage from "expo-sqlite/kv-store";
+
 const firebaseConfig = {
   apiKey: "AIzaSyAflOp4Z1DTNA9qYVwEiLeQb72p787HH3s",
   authDomain: "fbclone-f9186.firebaseapp.com",
@@ -16,7 +18,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(Storage),
+});
 const db = getFirestore(app);
 const storage = getStorage(app);
 

@@ -1,10 +1,9 @@
 import PasswordInput from "@/components/ui/PasswordInput";
 import Styles from "@/constants/Styles";
-import { useAuth } from "@/hooks/useContext";
-import { useRegister } from "@/hooks/useDB";
+import { useRegister } from "@/hooks/useFirebase";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { Avatar, Button, Text, TextInput } from "react-native-paper";
 
 type FormData = {
@@ -32,14 +31,15 @@ export default function Register() {
     },
   });
   const { register, loading } = useRegister();
-  const { login } = useAuth();
 
   const onSubmit = (data: FormData) => {
     register(data.email, data.password, `${data.firstName} ${data.lastName}`)
       .then((res) => {
-        login(res);
         navigate.replace("/tabs");
       })
+      .catch((err) => {
+        Alert.alert("Error", err.message);
+      });
   };
 
   const gotoLogin = () => {

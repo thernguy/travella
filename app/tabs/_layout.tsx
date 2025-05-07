@@ -8,7 +8,7 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Button, Text } from "react-native-paper";
-import { useAuth } from "@/hooks/useContext";
+import { useAuth } from "@/context/AppContext";
 
 export default function TabLayout() {
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerTitle: user?.name,
+        headerTitle: user?.displayName ?? "",
         headerTitleAlign: "center",
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -62,7 +62,7 @@ export default function TabLayout() {
         headerLeft: () => {
           return (
             <Text variant="titleLarge" style={{ marginLeft: 10 }}>
-              Doc Time
+              Travella
             </Text>
           );
         },

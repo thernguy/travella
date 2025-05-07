@@ -32,13 +32,9 @@ export const useRegister = () => {
       if (name) {
         await updateProfile(userCred.user, { displayName: name });
       }
-      return {
-        uid: userCred.user.uid,
-        email: userCred.user.email,
-        displayName: userCred.user.displayName,
-      };
+      return userCred.user;
     } catch (err: any) {
-      console.error("Registration error", err);
+      console.log("Registration error", err);
       throw err;
     } finally {
       setLoading(false);

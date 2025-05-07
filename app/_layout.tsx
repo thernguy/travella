@@ -1,5 +1,5 @@
 import { CombinedDarkTheme, CombinedDefaultTheme } from "@/constants/Themes";
-import { initDB } from "@/database/db";
+import { ContextProvider, useAuth } from "@/context/AppContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -11,8 +11,6 @@ import { useEffect } from "react";
 import { Platform } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
-import * as Application from "expo-application";
-import { ContextProvider, useAuth } from "@/context/AppContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -38,13 +36,7 @@ function RootLayout() {
       } else {
         router.replace("/auth");
       }
-      const setupDatabase = async () => {
-        await initDB();
-      };
-      setupDatabase();
     }
-    const bundleId = Application.applicationId;
-    console.log(`Bundle ID: ${bundleId}`);
   }, [loaded]);
 
   if (!loaded) {

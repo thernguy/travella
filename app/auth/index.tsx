@@ -4,8 +4,7 @@ import { Avatar, Button, Text, TextInput } from "react-native-paper";
 import Styles from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import PasswordInput from "@/components/ui/PasswordInput";
-import { useLogin } from "@/hooks/useDB";
-import { useAuth } from "@/hooks/useContext";
+import { useLogin } from "@/hooks/useFirebase";
 
 type FormData = {
   email: string;
@@ -25,11 +24,9 @@ export default function Login() {
     },
   });
   const { login, loading } = useLogin();
-  const { login: authLogin } = useAuth();
   const onSubmit = (data: FormData) => {
     login(data.email, data.password)
       .then((res) => {
-        authLogin(res);
         navigate.replace("/tabs");
       })
       .catch((err) => {

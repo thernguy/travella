@@ -1,7 +1,7 @@
 import BookingCard from "@/components/ui/BookingCard";
 import Spinner from "@/components/ui/Spinner";
 import Styles from "@/constants/Styles";
-import { useAuth } from "@/hooks/useContext";
+import { useAuth } from "@/context/AppContext";
 import { useBookings } from "@/hooks/useDB";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
@@ -9,10 +9,10 @@ import { Text } from "react-native-paper";
 export default function BookingList() {
   const { user } = useAuth();
 
-  const { bookings, loading } = useBookings(user?.id);
+  const { bookings, loading } = useBookings(user?.uid);
 
   if (loading) {
-    return (
+    return ( 
       <View style={Styles.empty}>
         <Spinner />
         <Text variant="bodyLarge">Fetching Booking...</Text>

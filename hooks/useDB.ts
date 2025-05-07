@@ -163,7 +163,7 @@ export const useLogin = () => {
   const login = async (email: string, password: string) => {
     setLoading(true);
     const user = await loginUser(email, password);
-    setLoading(false);
+    setLoading(false);    
     if (!user) {
       throw new Error("Invalid email or password");
     }

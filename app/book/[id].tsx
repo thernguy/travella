@@ -1,5 +1,5 @@
 import Styles from "@/constants/Styles";
-import { useAuth } from "@/hooks/useContext";
+import { useAuth } from "@/context/AppContext";
 import { useCreateBooking, useService } from "@/hooks/useDB";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -36,7 +36,7 @@ export default function BookService() {
 
   const onSubmit = async (data: BookingFormData) => {
     const { date, time, notes } = data;
-    const userId = user?.id;
+    const userId = user?.uid;
     if (!userId) {
       Alert.alert("Error", "User not found. Please log in again.", [
         { text: "OK", onPress: () => router.replace("/auth") },
