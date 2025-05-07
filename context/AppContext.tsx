@@ -66,7 +66,7 @@ export const ContextProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-export const useAuth = () => {
+export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {
     throw new Error("useAuth must be used inside AuthProvider");

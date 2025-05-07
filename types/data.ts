@@ -1,12 +1,12 @@
-export type Hospital = {
-  id: number;
+export type Log = {
+  id: string;
   name: string;
   logo: string;
   location: string;
 };
 
 export type Service = {
-  id: number;
+  id: string;
   hospital_id: number;
   title: string;
   price: number;
@@ -17,7 +17,7 @@ export type Service = {
 };
 
 export type Booking = {
-  id: number;
+  id: string;
   service_id: number;
   date: string;
   time: string;
@@ -27,7 +27,7 @@ export type Booking = {
 };
 
 export type User = {
-  id: number;
+  id: string;
   email: string;
   name: string;
 };

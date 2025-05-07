@@ -1,24 +1,25 @@
-import HospitalCard from "@/components/ui/HospitalCard";
+import LogCard from "@/components/ui/HospitalCard";
 import Spinner from "@/components/ui/Spinner";
 import Styles from "@/constants/Styles";
-import { useHospitals } from "@/hooks/useDB";
+import { useLogs } from "@/hooks/useDB";
+import { useFeed } from "@/hooks/useFirebase";
 import { useRouter } from "expo-router";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 import { Text } from "react-native-paper";
 
-export default function HospitalList() {
+export default function Feed() {
   const navigate = useRouter();
-  const handleSelect = (hospitalId: number) => {
-    navigate.push(`/hospitals/${hospitalId}`);
+  const handleSelect = (logId: string) => {
+    navigate.push(`/logs/${logId}`);
   };
 
-  const { hospitals, loading, fetch } = useHospitals();
-  
+  const { data, loading, fetch } = useFeed();
+
   if (loading) {
     return (
       <View style={Styles.empty}>
         <Spinner />
-        <Text variant="bodyLarge">Fetching Hospitals...</Text>
+        <Text variant="bodyLarge">Fetching Logs...</Text>
       </View>
     );
   }
@@ -29,16 +30,16 @@ export default function HospitalList() {
       contentContainerStyle={Styles.containerContent}
       automaticallyAdjustContentInsets
       automaticallyAdjustKeyboardInsets
-      data={hospitals}
+      data={data}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
-        <HospitalCard {...item} handleSelect={handleSelect} />
+        <LogCard {...item} handleSelect={handleSelect} />
       )}
       initialNumToRender={8}
       ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
       ListEmptyComponent={() => (
         <View style={Styles.empty}>
-          <Text variant="bodyLarge">No hospitals found.</Text>
+          <Text variant="bodyLarge">No log found.</Text>
         </View>
       )}
       refreshControl={

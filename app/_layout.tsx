@@ -1,5 +1,5 @@
 import { CombinedDarkTheme, CombinedDefaultTheme } from "@/constants/Themes";
-import { ContextProvider, useAuth } from "@/context/AppContext";
+import { ContextProvider, useAppContext } from "@/context/AppContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
@@ -16,7 +16,7 @@ import "react-native-reanimated";
 SplashScreen.preventAutoHideAsync();
 
 function RootLayout() {
-  const { user } = useAuth();
+  const { user } = useAppContext();
 
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({

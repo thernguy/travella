@@ -3,13 +3,13 @@ import { StyleSheet, View } from "react-native";
 import { Button, Card } from "react-native-paper";
 
 interface HospitalCardProps {
-  id: number;
+  id: string;
   name: string;
   location: string;
-  handleSelect: (id: number) => void;
+  handleSelect: (id: string) => void;
 }
 
-const HospitalCard: FC<HospitalCardProps> = ({
+const LogCard: FC<HospitalCardProps> = ({
   id,
   name,
   location,
@@ -27,7 +27,7 @@ const HospitalCard: FC<HospitalCardProps> = ({
   );
 };
 
-export default HospitalCard;
+export default LogCard;
 
 const styles = StyleSheet.create({
   card: {

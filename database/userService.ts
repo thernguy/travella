@@ -1,4 +1,4 @@
-import { User } from "@/types/hospitals";
+import { User } from "@/types/data";
 import * as SQLite from "expo-sqlite";
 import { Alert } from "react-native";
 

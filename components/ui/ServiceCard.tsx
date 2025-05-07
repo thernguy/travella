@@ -1,4 +1,4 @@
-import { Service } from "@/types/hospitals";
+import { Service } from "@/types/data";
 import { FC } from "react";
 import { StyleSheet } from "react-native";
 import { Button, Card, Text } from "react-native-paper";

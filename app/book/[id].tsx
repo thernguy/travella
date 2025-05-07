@@ -1,5 +1,5 @@
 import Styles from "@/constants/Styles";
-import { useAuth } from "@/context/AppContext";
+import { useAppContext } from "@/context/AppContext";
 import { useCreateBooking, useService } from "@/hooks/useDB";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -16,7 +16,7 @@ type BookingFormData = {
 
 export default function BookService() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { user } = useAuth();
+  const { user } = useAppContext();
   const router = useRouter();
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);

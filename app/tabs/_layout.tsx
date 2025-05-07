@@ -8,12 +8,12 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Button, Text } from "react-native-paper";
-import { useAuth } from "@/context/AppContext";
+import { useAppContext } from "@/context/AppContext";
 
 export default function TabLayout() {
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const { logout, user } = useAuth();
+  const { logout, user } = useAppContext();
   const handleLogout = () => {
     router.replace("/auth");
     logout();
@@ -71,16 +71,16 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Hospitals",
+          title: "Feed",
           tabBarIcon: ({ color }) => (
             <FontAwesome name="hospital-o" size={24} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="bookings"
+        name="logs"
         options={{
-          title: "Bookings",
+          title: "Logs",
           tabBarIcon: ({ color }) => (
             <Entypo name="bookmark" size={24} color={color} />
           ),

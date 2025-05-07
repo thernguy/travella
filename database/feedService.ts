@@ -1,16 +1,11 @@
 import { HOSPITALS_DATA, SERVICE_DATA } from "@/constants/data";
-import { Hospital, Service } from "@/types/hospitals";
+import { Log, Service } from "@/types/data";
 import * as SQLite from "expo-sqlite";
 
-export const getHospitals = async () => {
-  const db = await SQLite.openDatabaseAsync("booking-app.db", {
-    useNewConnection: true,
-  });
-  const hospitals = await db.getAllAsync(`
-      SELECT * FROM hospitals;
-    `);
+export const getFeed = async () => {
+  const data: Log[] = [];
 
-  return hospitals as Hospital[];
+  return data;
 };
 
 export const getAllServices = async () => {
@@ -29,8 +24,8 @@ export const getAllServices = async () => {
   return services as Service[];
 };
 
-export const getServicesById = async (hospitalId: number) => {
-  if (!hospitalId) {
+export const getLogById = async (logId: string) => {
+  if (!logId) {
     return [];
   }
   const db = await SQLite.openDatabaseAsync("booking-app.db", {
@@ -40,7 +35,7 @@ export const getServicesById = async (hospitalId: number) => {
     `
       SELECT * FROM services WHERE hospital_id = ?;
     `,
-    [hospitalId]
+    [logId]
   );
 
   return services as Service[];

@@ -1,22 +1,22 @@
-import { createBooking, getBookingsForUser } from "@/database/bookingService";
+import { createLog, getLogsForUser } from "@/database/logServices";
 import {
-  getHospitals,
+  getFeed,
   getServiceById,
-  getServicesById,
-} from "@/database/hospitalService";
+  getLogById,
+} from "@/database/feedService";
 import { loginUser, registerUser } from "@/database/userService";
-import { Hospital, Service, User } from "@/types/hospitals";
+import { Log, Service, User } from "@/types/data";
 import { useEffect, useState } from "react";
 
-export const useHospitals = () => {
-  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+export const useLogs = () => {
+  const [data, setData] = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = async () => {
     try {
-      const data = await getHospitals();
-      setHospitals(data);
+      const data = await getFeed();
+      setData(data);
     } catch (error) {
       console.error("Error fetching hospitals:", error);
       setError("Failed to fetch hospitals");
@@ -29,10 +29,10 @@ export const useHospitals = () => {
     fetch();
   }, []);
 
-  return { hospitals, loading, error, fetch };
+  return { data, loading, error, fetch };
 };
 
-export const useServices = (hospitalId: number) => {
+export const useServices = (logId: string) => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ export const useServices = (hospitalId: number) => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const data = await getServicesById(hospitalId);
+        const data = await getLogById(logId);
         setServices(data);
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -50,10 +50,10 @@ export const useServices = (hospitalId: number) => {
       }
     };
 
-    if (hospitalId) {
+    if (logId) {
       fetchServices();
     }
-  }, [hospitalId]);
+  }, [logId]);
 
   return { services, loading, error };
 };
@@ -97,7 +97,7 @@ export const useCreateBooking = () => {
     notes: string
   ) => {
     setLoading(true);
-    const booking = await createBooking(userId, serviceId, date, time, notes);
+    const booking = await createLog(userId, serviceId, date, time, notes);
     setLoading(false);
     if (!booking) {
       setError("Failed to create booking");
@@ -111,20 +111,20 @@ export const useCreateBooking = () => {
   return { create, loading, error, success };
 };
 
-export const useBookings = (userId: number | undefined) => {
-  const [bookings, setBookings] = useState<any[]>([]);
+export const useUserLogs = (userId: string | undefined) => {
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetch = async () => {
       try {
         if (!userId) {
           setError("User ID is required");
           return;
         }
-        const data = await getBookingsForUser(userId);
-        setBookings(data);
+        const data = await getLogsForUser(userId);
+        setData(data);
       } catch (error) {
         console.error("Error fetching bookings:", error);
         setError("Failed to fetch bookings");
@@ -134,44 +134,14 @@ export const useBookings = (userId: number | undefined) => {
     };
 
     if (userId) {
-      fetchBookings();
+      fetch();
     }
   }, [userId]);
 
-  return { bookings, loading, error };
+  return { bookings: data, loading, error };
 };
 
-export const useRegister = () => {
-  const [loading, setLoading] = useState(false);
 
-  const register = async (email: string, password: string, name: string) => {
-    setLoading(true);
-    const user = await registerUser(email, password, name).finally(() => {
-      setLoading(false);
-    });
-    if (!user) {
-      throw new Error("Invalid email or password");
-    }
-    return user as User;
-  };
-
-  return { register, loading };
-};
-export const useLogin = () => {
-  const [loading, setLoading] = useState(false);
-
-  const login = async (email: string, password: string) => {
-    setLoading(true);
-    const user = await loginUser(email, password);
-    setLoading(false);    
-    if (!user) {
-      throw new Error("Invalid email or password");
-    }
-    return user as User;
-  };
-
-  return { login, loading };
-};
 
 // export const useBookings = (userId: number) => {
 //   const [bookings, setBookings] = useState<any[]>([]);
