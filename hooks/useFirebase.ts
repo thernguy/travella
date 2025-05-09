@@ -1,10 +1,20 @@
-import { loginUser } from "@/services/firebase";
-import { useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createLog, getLogs } from "@/services/logServices";
+import {
+  fetchAllOtherUsers,
+  loginUser,
+  saveUserToFirestore,
+  searchUsersByName,
+} from "@/services/userService";
 import { auth } from "@/firebaseConfig";
-import { getFeed } from "@/database/feedService";
-import { LogFormData, LogType } from "@/types/data";
-import { createLog, getLogs } from "@/database/logServices";
+import { IUser, LogFormData, LogType } from "@/types/data";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  User,
+} from "firebase/auth";
+import { useEffect, useState } from "react";
+import { LayoutAnimation } from "react-native";
+import { subscribeToMessages } from "@/services/chatService";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -34,6 +44,7 @@ export const useRegister = () => {
       );
       if (name) {
         await updateProfile(userCred.user, { displayName: name });
+        await saveUserToFirestore(userCred.user);
       }
       return userCred.user;
     } catch (err: any) {
@@ -92,4 +103,49 @@ export const useCreateLog = () => {
   };
 
   return { data, loading, error, create };
+};
+
+export const useGetUsers = (userId?: string) => {
+  const [data, setData] = useState<IUser[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const loadAllUsers = async () => {
+    if (!userId) {
+      return;
+    }
+    setLoading(true);
+    const data = await fetchAllOtherUsers(userId);
+    setData(data);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setLoading(false);
+  };
+
+  const searchUsers = async (query: string) => {
+    if (query.trim() === "") {
+      await loadAllUsers();
+    } else {
+      setLoading(true);
+      const results = await searchUsersByName(query);
+      setData(results);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadAllUsers();
+  }, []);
+
+  return { data, loading, searchUsers };
+};
+
+export const useChatMessages = (senderId?: string, recipientId?: string) => {
+  const [messages, setMessages] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!senderId || !recipientId) return;
+    const unsubscribe = subscribeToMessages(senderId, recipientId, setMessages);
+    return () => unsubscribe();
+  }, [senderId, recipientId]);
+
+  return messages;
 };

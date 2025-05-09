@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type LogType = {
   id: string;
   createdAt: string;
@@ -14,8 +16,19 @@ export type LogFormData = {
   photos: string[];
 };
 
-export type User = {
-  id: string;
+export type IUser = {
+  uid: string;
   email: string;
   name: string;
+  avatar: string;
+};
+export type IMessage = {
+  id: string;
+  senderId: string;
+  recipientId: string;
+  message: string;
+  messageType: "message" | "image" | "file";
+  filePath?: string;
+  createdAt: Timestamp;
+  status: "sent" | "seen";
 };

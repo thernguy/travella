@@ -2,7 +2,7 @@ import { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Card } from "react-native-paper";
 
-interface HospitalCardProps {
+interface LogCardProps {
   id: string;
   location: string;
   notes: string;
@@ -10,7 +10,7 @@ interface HospitalCardProps {
   handleSelect: (id: string) => void;
 }
 
-const LogCard: FC<HospitalCardProps> = ({
+const LogCard: FC<LogCardProps> = ({
   id,
   location,
   notes,
@@ -22,7 +22,7 @@ const LogCard: FC<HospitalCardProps> = ({
         <Card.Title title={location} subtitle={notes} />
       </View>
       <Card.Actions>
-        <Button onPress={() => handleSelect(id)}>View Services</Button>
+        
       </Card.Actions>
     </Card>
   );

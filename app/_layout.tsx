@@ -48,21 +48,23 @@ function RootLayout() {
       <PaperProvider theme={theme}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen
-            name="hospitals/[id]"
+            name="search/index"
             options={{
               headerShown: true,
-              title: "Travella",
-              headerBackTitle: "Back",
+              title: "Search User",
+              animation: "fade",
+              headerBackTitle: "Feed",
             }}
           />
           <Stack.Screen
-            name="book/[id]"
-            options={{
-              headerShown: true,
-              title: "Book Service",
-              presentation:
-                Platform.OS === "ios" ? "formSheet" : "containedModal",
-              animation: Platform.OS === "ios" ? "slide_from_bottom" : "fade",
+            name="chat/index"
+            options={({ route }) => {
+              const params = route.params as { user?: string };
+              const user = params?.user ? JSON.parse(params.user) : null;
+              return {
+                headerShown: true,
+                title: user?.name || "Chat",
+              };
             }}
           />
         </Stack>
