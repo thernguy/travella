@@ -6,6 +6,7 @@ import {
   doc,
   getDocs,
   query,
+  serverTimestamp,
   setDoc,
   where,
 } from "firebase/firestore";
@@ -58,4 +59,9 @@ export const saveUserToFirestore = async (user: User) => {
     name: user.displayName || "",
     avatar: user.photoURL || "",
   });
+};
+
+export const setUserOnline = (userId: string, state: 'online' | 'offline') => {
+  const ref = doc(db, 'status', userId);
+  return setDoc(ref, { state: state, last_changed: serverTimestamp() }, { merge: true });
 };

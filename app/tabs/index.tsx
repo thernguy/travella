@@ -3,7 +3,9 @@ import Spinner from "@/components/ui/Spinner";
 import Styles from "@/constants/Styles";
 import { useAppContext } from "@/context/AppContext";
 import { useGetLogs } from "@/hooks/useFirebase";
+import { setUserOnline } from "@/services/userService";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import {
   FlatList,
   RefreshControl,
@@ -24,6 +26,13 @@ export default function Feed() {
   const onSearchPress = () => {
     navigate.push("/search");
   };
+  useEffect(() => {
+    if (!user) return;
+    setUserOnline(user?.uid, 'online');
+    return () => {
+      setUserOnline(user.uid, 'offline');
+    }
+  }, [user]);
   if (loading) {
     return (
       <View style={Styles.empty}>

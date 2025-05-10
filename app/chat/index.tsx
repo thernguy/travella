@@ -1,10 +1,12 @@
 import Spinner from "@/components/ui/Spinner";
 import { useAppContext } from "@/context/AppContext";
+import { db } from "@/firebaseConfig";
 import { useChatMessages } from "@/hooks/useFirebase";
 import { sendMessage } from "@/services/chatService";
 import { IUser } from "@/types/data";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { FC, useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { FC, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -107,9 +109,36 @@ const ChatScreen: FC<indexProps> = (props) => {
   const inset = useSafeAreaInsets();
   const messages = useChatMessages(senderId, recipientId);
 
+  useEffect(() => {
+    onSnapshot(doc(db, 'status', recipientId), (doc) => {
+      const isOnline = doc.data()?.state === 'online';
+      console.log("Is online", isOnline);
+      navigation.setOptions((e: any) => ({
+        ...e,
+        headerRight: () => 
+            {true ? (
+              <Text
+                style={{
+                }}
+              >
+                Online
+              </Text>
+            ) : (
+              <Text
+                style={{
+                }}
+              >
+                Offline
+              </Text>
+              
+            )}
+      }));
+    });
+  }
+  , []);
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={'padding'}
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 75}
       style={{ flex: 1, marginBottom: inset.bottom }}
     >
@@ -117,7 +146,6 @@ const ChatScreen: FC<indexProps> = (props) => {
         automaticallyAdjustKeyboardInsets
         contentContainerStyle={{
           paddingHorizontal: 12,
-          flexGrow: 1,
         }}
         data={messages}
         inverted
