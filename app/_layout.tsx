@@ -8,7 +8,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
-import { Platform } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import "react-native-reanimated";
 
@@ -46,7 +45,10 @@ function RootLayout() {
   return (
     <ThemeProvider value={theme as any}>
       <PaperProvider theme={theme}>
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack
+          screenOptions={{ headerShown: false }}
+          initialRouteName={user ? "tabs" : "auth"}
+        >
           <Stack.Screen
             name="search/index"
             options={{

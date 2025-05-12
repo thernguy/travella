@@ -46,6 +46,7 @@ export default function Feed() {
           style={{
             pointerEvents: "none",
           }}
+          autoFocus={false}
         />
       </TouchableOpacity>
       <FlatList

@@ -1,4 +1,4 @@
-# Travel Logs App
+# Travelog App
 
 ## Overview
 This app allows users to create and manage travel logs, as well as chat with other users in real-time. Users can add travel entries with location, photos, and journal notes. They can also search for and chat with other users, with real-time message updates.
@@ -55,4 +55,9 @@ npm start
 5. Create a new account or log in with:
    - Username: test@gmail.com
    - Password: password
+   2nd account to test Chat:
+    - Username: musk@spacex.com
+    - Password: password
 6. Start creating travel logs and chatting with other users!
+
+## NOTE: The app was optimized for iOS, so previewing on iOS simulator would be better. 

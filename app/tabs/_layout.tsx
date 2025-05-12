@@ -33,6 +33,7 @@ export default function TabLayout() {
           onPress: () => {
             handleLogout();
           },
+          style: "destructive",
         },
       ],
       { cancelable: false }
@@ -44,6 +45,9 @@ export default function TabLayout() {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
       if (nextAppState === "background" || nextAppState === "inactive") {
         setUserOnline(user?.uid, "offline");
+      }
+      if (nextAppState === "active") {
+        setUserOnline(user?.uid, "online");
       }
     };
     const subscription = AppState.addEventListener(
@@ -80,7 +84,7 @@ export default function TabLayout() {
         headerLeft: () => {
           return (
             <Text variant="titleLarge" style={{ marginLeft: 10 }}>
-              Travella
+              Travelog
             </Text>
           );
         },
