@@ -1,4 +1,4 @@
-import { auth } from "@/firebaseConfig";
+import { auth, db } from "@/firebaseConfig";
 import { subscribeToMessages } from "@/services/chatService";
 import { createLog, getLogs } from "@/services/logServices";
 import {
@@ -8,10 +8,8 @@ import {
   searchUsersByName,
 } from "@/services/userService";
 import { IUser, LogFormData, LogType } from "@/types/data";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { collection, onSnapshot, orderBy, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 export const useLogin = () => {
@@ -70,16 +68,42 @@ export const useGetLogs = (userId: string | undefined) => {
       const data = await getLogs(userId);
       setData(data);
     } catch (error) {
-      console.error("Error fetching hospitals:", error);
-      setError("Failed to fetch hospitals");
+      console.error("Error fetching logs:", error);
+      setError("Failed to fetch logs");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetch();
-  }, []);
+    if (!userId) return;
+
+    const logsRef = collection(db, "travelLogs");
+    const q = query(
+      logsRef,
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const logs: LogType[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as LogType[];
+        setData(logs);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("Live fetch error:", err);
+        setError("Live fetch failed");
+        setLoading(false);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [userId]);
 
   return { data, loading, error, fetch };
 };
@@ -93,8 +117,8 @@ export const useCreateLog = () => {
       const res = await createLog(log);
       setData((prev) => [...prev, { ...log, id: res }]);
     } catch (error) {
-      console.error("Error fetching bookings:", error);
-      setError("Failed to fetch bookings");
+      console.error("Error fetching logs:", error);
+      setError("Failed to fetch logs");
     } finally {
       setLoading(false);
     }

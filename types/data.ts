@@ -2,7 +2,7 @@ import { Timestamp } from "firebase/firestore";
 
 export type LogType = {
   id: string;
-  createdAt: string;
+  createdAt: Timestamp;
   userId: string;
   location: string;
   notes: string;

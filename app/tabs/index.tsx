@@ -9,21 +9,19 @@ import {
   RefreshControl,
   StyleSheet,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { Searchbar, Text } from "react-native-paper";
 
 export default function Feed() {
   const navigate = useRouter();
-  const handleSelect = (logId: string) => {
-    // navigate.push(`/logs/${logId}`);
-  };
   const { user } = useAppContext();
 
   const { data, loading, fetch } = useGetLogs(user?.uid);
   const onSearchPress = () => {
     navigate.push("/search");
   };
+  const handleSelect = (logId: string) => {};
 
   if (loading) {
     return (
@@ -36,8 +34,19 @@ export default function Feed() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onSearchPress} activeOpacity={0.8}>
-        <Searchbar placeholder="Search User..." value="" pointerEvents="none" />
+      <TouchableOpacity
+        onPress={onSearchPress}
+        activeOpacity={0.8}
+        style={{ padding: 8 }}
+      >
+        <Searchbar
+          placeholder="Search User..."
+          value=""
+          pointerEvents="none"
+          style={{
+            pointerEvents: "none",
+          }}
+        />
       </TouchableOpacity>
       <FlatList
         style={styles.flatListContainer}
@@ -77,9 +86,10 @@ export default function Feed() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    flex: 1,
   },
   flatListContainer: {
-    marginVertical: 16,
+    flexGrow: 1,
+    paddingHorizontal: 12,
   },
 });

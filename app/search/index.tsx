@@ -107,13 +107,13 @@ export default function SearchScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    padding: 8,
   },
   form: {
     gap: 12,
   },
   flatListContainer: {
-    marginVertical: 16,
+    marginVertical: 12,
     paddingHorizontal: 2,
   },
 });

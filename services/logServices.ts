@@ -1,9 +1,10 @@
 import { db } from "@/firebaseConfig";
-import { LogFormData, LogType } from "@/types/data";
+import { LogFormData } from "@/types/data";
 import {
   addDoc,
   collection,
   getDocs,
+  orderBy,
   query,
   Timestamp,
   where,
@@ -19,7 +20,11 @@ export const createLog = async (log: LogFormData) => {
 
 export const getLogs = async (userId: string) => {
   const logsRef = collection(db, "travelLogs");
-  const q = query(logsRef, where("userId", "==", userId));
+  const q = query(
+    logsRef,
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
+  );
   const querySnapshot = await getDocs(q);
   const logs: any[] = [];
   querySnapshot.forEach((doc) => {
