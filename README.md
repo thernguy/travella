@@ -1,81 +1,58 @@
-# Booking App Prototype
-
-A mobile-first booking system prototype built with React Native (Expo) and SQLite.
+# Travel Logs App
 
 ## Overview
+This app allows users to create and manage travel logs, as well as chat with other users in real-time. Users can add travel entries with location, photos, and journal notes. They can also search for and chat with other users, with real-time message updates.
 
-Built a mobile-focused booking system prototype in ~6.5 hours using React Native (Expo) with local SQLite database and clean architecture.
+## Core Features
+
+### Travel Log
+- **Create and Save Entries:**
+  - Users can create travel logs with **location** (via GPS or manual entry), **photos** (camera or gallery upload), and **journal notes** (text input).
+- **Feed View:**
+  - Logs are displayed in a beautiful feed, with the most recent entries shown at the top.
+- **Data Storage:**
+  - Travel log data is stored in **Firebase Firestore** and uploaded images are stored in **Cloudinary**.
+
+### Real-Time Chat
+- **User Search & Chat:**
+  - Users can search for others and start 1-on-1 chats.
+  - **Online/Offline Status:** User presence is tracked in real-time.
+- **Persistent Messages:**
+  - All messages are saved in **Firebase Firestore**, ensuring they persist across sessions.
+- **Real-Time Updates:**
+  - Messages update in real-time using **Firebase Firestore** real-time listeners.
 
 ## Tech Stack
+- **React Native (Expo):** For building cross-platform mobile apps.
+- **Firebase (Firestore):** Used for user authentication, storing travel logs, and handling real-time chat messages.
+- **Cloudinary:** For storing and serving images uploaded by users.
+  
+### Why These Tech Choices?
+- **Firebase Firestore** was chosen for its ease of use, scalability, and built-in support for real-time updates, which are crucial for both the travel log and chat features.
+- **Cloudinary** is used for image storage because of its reliability, speed, and free tier that fits our needs.
+- **Expo** provides a fast, simple setup for React Native apps, and the **Expo Camera** component is perfect for integrating camera functionality without requiring native code changes.
 
-- **Mobile Framework**: React Native (Expo)
-- **Backend/API**: Local SQLite with `expo-sqlite`
-- **State Management**: React Context API
-- **Persistence**: AsyncStorage for user login sessions
+## Setup
 
-## Features
+1. Clone the repo:
 
-- Email/password authentication
-- List of hospitals with details
-- View hospital services/tests
-- Book an appointment
-- Basic validation and error handling
-- Offline-first (SQLite database)
+```bash
+git clone https://github.com/thernguy/travella
+cd travella
 
-## Documentation and Decisions
+2. Install dependencies:
 
-### Stack & Decisions
+```bash
+npm install
+```
 
-- React Native (Expo) chosen for rapid cross-platform development.
-- expo-sqlite used for local, offline-capable database.
-- AsyncStorage used for login session persistence.
+3. Run the app:
 
-### API & Data Structure
-
-- Custom hooks (`useAuth`, `useHospitals`, `useServices`) manage loading, error, and DB operations.
-- `db.ts` handles:
-  - Initializing database and tables
-  - Seeding mock hospitals, services, and users if empty
-
-## Project Structure
-
-- `/components/UI` → Reusable UI components
-- `/constants` → Mock data for hospitals and services
-- `/contexts` → Authentication context
-- `/db` → Database setup and seeding
-- `/hooks` → Custom API and logic hooks
-- `/screens` → All application screens
-
-
-## Error Handling
-
-- Loading spinners during API fetches.
-- Error alerts for user feedback and console logs for debugging.
-
-## Assumptions
-
-- Single user session (no reset password, OTP, etc.).
-- App remains usable offline after installation.
-- Focused on clean UX over full production-level flows.
-
-## 🚀 How to Run
-
-1. **Clone the repo**.
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   npm run start
-3. Open the app using:
-   - Expo Go (on your phone)
-   - OR an iOS/Android simulator.
-
-
-## 🔐 Login Credentials
-Use the following to log in:
-
-- Email: mamamun1999@gmail.com
-
-- Password: password@
-
-Or simply register a new account from the app.
+```bash
+npm start
+```
+4. Open the app in an emulator or on a physical device using the Expo Go app.
+5. Create a new account or log in with:
+   - Username: test@gmail.com
+   - Password: password
+6. Start creating travel logs and chatting with other users!
