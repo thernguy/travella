@@ -1,14 +1,15 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Entypo from "@expo/vector-icons/Entypo";
 import { Tabs, useRouter } from "expo-router";
-import React from "react";
-import { Alert, Platform } from "react-native";
+import React, { useEffect } from "react";
+import { Alert, AppState, AppStateStatus, Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Button, Text } from "react-native-paper";
 import { useAppContext } from "@/context/AppContext";
+import { setUserOnline } from "@/services/userService";
 
 export default function TabLayout() {
   const router = useRouter();
@@ -37,6 +38,23 @@ export default function TabLayout() {
       { cancelable: false }
     );
   };
+  useEffect(() => {
+    if (!user) return;
+    setUserOnline(user?.uid, "online");
+    const handleAppStateChange = (nextAppState: AppStateStatus) => {
+      if (nextAppState === "background" || nextAppState === "inactive") {
+        setUserOnline(user?.uid, "offline");
+      }
+    };
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange
+    );
+    return () => {
+      setUserOnline(user?.uid, "offline");
+      subscription.remove();
+    };
+  }, [user]);
   return (
     <Tabs
       screenOptions={{

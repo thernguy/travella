@@ -1,3 +1,5 @@
+import { auth } from "@/firebaseConfig";
+import { subscribeToMessages } from "@/services/chatService";
 import { createLog, getLogs } from "@/services/logServices";
 import {
   fetchAllOtherUsers,
@@ -5,16 +7,12 @@ import {
   saveUserToFirestore,
   searchUsersByName,
 } from "@/services/userService";
-import { auth } from "@/firebaseConfig";
 import { IUser, LogFormData, LogType } from "@/types/data";
 import {
   createUserWithEmailAndPassword,
-  updateProfile,
-  User,
+  updateProfile
 } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { LayoutAnimation } from "react-native";
-import { subscribeToMessages } from "@/services/chatService";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -116,7 +114,6 @@ export const useGetUsers = (userId?: string) => {
     setLoading(true);
     const data = await fetchAllOtherUsers(userId);
     setData(data);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setLoading(false);
   };
 
@@ -143,7 +140,10 @@ export const useChatMessages = (senderId?: string, recipientId?: string) => {
 
   useEffect(() => {
     if (!senderId || !recipientId) return;
-    const unsubscribe = subscribeToMessages(senderId, recipientId, setMessages);
+    const unsubscribe = subscribeToMessages(senderId, recipientId, (msgs) => {
+      setMessages(msgs);
+    });
+
     return () => unsubscribe();
   }, [senderId, recipientId]);
 
